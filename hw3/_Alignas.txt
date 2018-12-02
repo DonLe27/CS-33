@@ -1,0 +1,7 @@
+The expression will return 16. char a will take up one byte. To align itself to an offset
+that is a multiple of 8, char b will be aligned at offset 8 and take up 1 byte. char c
+will take up a byte at offset 9. There will then be space filled until offset 16. This
+is because structures fill up space so that when multiple of the structures are aligned, their
+elements will still remain aligned. Filling up the space until offset 16 and having the 
+structure fill up 16 bytes assures that char b, the variable with the biggest offset alignment,
+and char a and char c will always be aligned.

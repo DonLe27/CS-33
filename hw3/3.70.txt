@@ -1,0 +1,19 @@
+A. 
+e1.p 0
+el.y 8
+e2.x 0
+e2.next 8
+
+B. 16
+
+C. 
+The assembly first moves either up->e1.y or up->e2.next %rax. Since %rax is dereferenced in the
+next line, inside %rax must have been up->e2.next. %rdx changes to the value of *(up->e2.next). Since
+%rdx is dereferenced in the next line, %rdx must have been the value *(up->e2.next).e1.p. 
+%rdx is set to the value of *(*(up->e2.next).e1.p). In the next line, 8(%rax) is subtracted
+from %rdx. Since 8(%rax) must represent a long, that number is *(up->e2.next).e1.y. %rdi is
+still up so (%rdi) is (up->e2.x). 
+
+The final c code for the line to replace must therefore be:
+
+up->e2.x = *(*(up->e2.next).e1.p) - *(up->e2.next).e1.y

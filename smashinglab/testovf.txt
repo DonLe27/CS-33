@@ -1,0 +1,46 @@
+(1) with -O2
+
+-O2 optimizes the compiled code to increase code performance. The assembly code shows
+
+xorl %eax, %eax
+ret
+
+The value stored in %eax becomes 0 due to the xorl and that value is returned. The code
+performs these intructions because it assumes any long plus a positive number will NOT
+be less than just the long by itself. Therefore, it always returns 0 for false. 
+
+
+(2) with -O2 -fwrapv
+
+-fwrapv causes the compiled code to follow overflow wrapping according to 2's compliment
+representation. The assembly code shows:
+
+movavsq $9223372036854775807, %rax (sets %rax to 9223372036854775807)
+addq %rdi, %rax (sets %rax to 9223372036854775807 plus the first argument which is n)
+cmpq %rdi, %rax (compares argument n to (n + 9223372036854775807) which is inside %rax. 
+This comparison works by doing (n + 9223372036854775807) - n. It sets all the flags 
+including the sign and overflow flag)
+setl %al (The value of Sign Flag ^ Overflow Flag is put into %al. If 
+(n + 9223372036854775807) < n, then the 1 will be returned. Else, 0 will be returned.
+ret (The value inside %al is returned)
+
+As could be seen, the code could not be optimized like it was for -O2 without the -fwrapv.
+This is because the compilier could not assume that a long plus a positive number is always
+less than the long becauser there could be wrap around overflow. If 9223372036854775807
+causes the value put into %rax to overflow, %rax will turn negative and be less than the
+original argument. Since returning true is possible, the compiled code cannot simply return
+0 like it did for -O2.
+
+(3) with -O2 -fsanitize=undefined
+
+-fsanitize=undefined turns on UndefinedBehaviorSanitizer which simply detects undefined
+behavior, issues runtime warnings, and continues executing in most cases. Just like the 
+assembly code with just -O2, the assembly code shows:
+
+xorl %eax, %eax
+ret
+
+0 is always returned just like for compiling with just -O2. The code optimizes the instructions
+the same way, assuming any long plus a positive number will never be less than just the long. 
+The -fsanitize=undefined does not affect this -O2 optimization  and will just
+affect the code by issuing a warning if overflow occurs.  

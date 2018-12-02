@@ -1,0 +1,16 @@
+Based off the assembly code, t is at an offset of 8 pass %rsi. u is at an offset of
+32 pass %rsi. y is at an offset of 184 pass %rdi. 
+
+Since t is at 8 and t has to be at an offset multiple of 4, char array[B] has to go to 
+offset 5, 6, 7, or 8. 
+
+Since u is at offset 32 and u has to be at an offset multiple of 8, A can be 7,8,9 or 10
+(accounting for the fact that there are the short s[A] must occupy from 14 to 20 bytes
+and a short occupies 2 bytes).
+
+y is at offset 184 and must be at an offset multiple of 8. With this information
+and the fact that an integer array takes up space in multiples of 4 bytes, the array
+x[A][B] can hold 45 or 46 integers. In otherwords, A * B must be 45 or 46.
+
+The only possible combination of values for A and B that yield 45 or 46 is A = 9 and
+B = 5.   

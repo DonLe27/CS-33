@@ -1,0 +1,11 @@
+12.17
+A. The main thread calls the function exit(0) directly after creating the peer thread that prints the string. This function is the Linux exit function that terminates the process and all threads associated with the process. That means once the function is called, the main thread and the peer thread will be terminated. Since the peer thread must sleep for a second before printing the string, it is terminated before it has a chance to print the thread. 
+
+B. You can replace the exit(0) function with pthread_exit(NULL). This function call will wait for the peer thread that prints the string to finish before terminating both the main thread and peer thread.
+
+Alternatively, you can use pthread_join(tid, NULL) to join the main thread to the peer thread before calling the exit(0). This will make the main thread wait for the peer thread to terminate before calling exit(0)
+
+12.25
+echo_cnt is not reentrant because different threads calling echo_cnt references the shared variable static int byte_cnt.
+
+echo_cnt is thread safe. It does not fit in any of the classes of thread-unsafe functions. First, the function protects its shared variable byte_cnt with a mutex. Second, the function does not keep any state across multiple invocations. The result of the previous functions will not affect how future calls of the function will behave. Third, since the function does not return any value, it cannot return a pointer to a static variable. Last, the function does not call any thread unsafe functions. All the functions echo_cnt call like Rio_readinitb(&ris, connfd) or Pthread_once(&once, init_echo_cnt) are safe.

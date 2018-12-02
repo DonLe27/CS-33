@@ -1,0 +1,86 @@
+1. Gather Instruction Traces
+
+Moved to file ~eggert/bin64/bin/emacs-26.1  using cd
+Typed emacs into GCC attempting open file 
+
+Talked to TA
+typed gdb emacs into GCC
+typed b main
+typed b Ftimes
+typed r
+Used step and info reg to understand format
+
+Typed q to quit
+typed gdb emacs into GCC
+typed b main
+typed b Ftimes
+typed set disassemble-next-line on
+typed r -batch -eval '(print (* 1250284240 -1844255039))'
+typed si
+Typed info reg depending on what the previous instruction changed
+Copied assembly code that appeared into notepad
+for each assembly line that changed memory or registers, typed info reg registername 
+Copied changed register into notepad
+Repeated for remainder of function
+Moved to file ~eggert/bin64/bin/emacs-26.1  using cd
+Typed emacs into GCC attempting open file 
+
+Talked to TA
+typed gdb emacs into GCC
+typed b main
+typed b Ftimes
+typed r
+Used step and info reg to understand format
+
+Typed q to quit
+typed gdb emacs into GCC
+typed b main
+typed b Ftimes
+typed set disassemble-next-line on
+typed r -batch -eval '(print (* 1250284240 -1844255039))'
+typed si
+Typed info reg depending on what the previous instruction changed
+Copied assembly code that appeared into notepad
+for each assembly line that changed memory or registers, typed info reg registername 
+Copied changed register into notepad
+Repeated for remainder of function
+
+
+2. Examine Integer Overflow Handling
+
+Typed gcc -O2 -S testovf.c 
+This compiles testovf.c with -O2 optimization. I took a screen shot of the 
+assembly language after opening the file with nano testovf.s
+Repeated for gcc -O2 -fwrapv testovf.c
+For gcc -02 -fsanitize=undefined testovf.c, I got a unrecognized command error. After
+checking piazza, I realized my gcc was out of date and used /usr/local/cs/bin/gcc.
+I repeated the previous compiliations with the updated gcc to check if anything 
+was different and nothing was. I then compared the screenshots of the assembly code.
+
+3. A few more questions
+
+Question 1
+I traced through my trace.tr file, concentrating on the end where I expected the final
+output to be put into %rax. After finding the last lea instruction, I checked the earlier
+code and found the assembly code:
+547998	48 0f af fd	imul %rbp,%rdi	rdi=dfffffffdceaced0
+54799c	0f 90 c0	seto %al	al=0
+54799f	48 89 fd	mov %rdi,%rbp	rbp=dfffffffdceaced0 
+I noticed that the correct answer was inputted and checked to see where it was changed.
+Further information can be found in answers.txt
+
+Question 2
+I went to the Emacs source code with cd ~eggert/src/emacs-26.1/src.
+After referencing online material, I went to the lisp.h file where I found relevant 
+information on MOST_POSTIVE_FIXUM and MOST_NEGATIVE_FIXUM. I detailed how I used the 
+information in answers.txt
+
+Question 3
+I manipulated the operation algebraically to see how overflow would affect the operation.
+When I ended up with an output 1000.00001, I referenced online material to see how 
+Lisp treats bits not in the first 62 bits to see how 1 was obtained as output. I detailed
+more of what I learned in answers.txt
+
+Question 4
+I used my knowledge of -fwrapv's funtionality and wrote how the flag could cause 
+mathematically incorrect answers in answers.txt.
